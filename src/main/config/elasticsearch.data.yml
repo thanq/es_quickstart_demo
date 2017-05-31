@@ -1,0 +1,53 @@
+cluster.name: you_cluster_name
+node.name: data1
+
+node.master: false
+node.data: true
+
+path.data: /es_data1/data
+path.logs: /es_data1/logs
+
+network.host: 127.0.0.1 # your ip
+
+transport.tcp.port: 9300 # your tcp port
+transport.tcp.compress: true
+http.port: 9200 # your
+
+discovery.zen.ping.unicast.hosts: "127.0.0.1:9301,127.0.0.2:9301" #所有master的tcp发现端口
+discovery.zen.ping_timeout: 30s
+
+#心跳timeout设为2分钟，超过6次心跳没有回应，则认为该节点脱离master，每隔20s发送一次心跳。
+discovery.zen.fd.ping_timeout: 120s
+discovery.zen.fd.ping_retries: 6
+discovery.zen.fd.ping_interval: 20s
+#要选出可用master, 最少需要几个master节点
+#discovery.zen.minimum_master_nodes: 2
+discovery.zen.minimum_master_nodes: 1
+
+http.cors.enabled: true
+http.cors.allow-origin: /https?:\/\/localhost(:[0-9]+)?/
+
+#不使用交换区
+bootstrap.memory_lock: true
+
+#cluster.routing.allocation.awareness.attributes: group
+
+indices.fielddata.cache.size: 20%
+indices.breaker.total.limit: 30%
+indices.breaker.fielddata.limit: 20%
+indices.breaker.request.limit: 10%
+
+
+#删除索引要求全名
+action.destructive_requires_name: true
+##cluster.routing.allocation.cluster_concurrent_rebalance:2  只允许同时移动2个分片
+##cluster.routing.allocation.disk.threshold_enabled: true,   default  85%不再分配, 90%迁移走
+
+thread_pool:
+  bulk:
+    size: 5
+    queue_size: 512
+
+  search:
+    size: 48
+    queue_size: 256

@@ -1,0 +1,39 @@
+cluster.name: you_cluster_name
+node.name: master1
+
+node.master: true
+node.data: false
+
+path.data: /es_master1/data
+path.logs: /es_master1/logs
+
+network.host: 127.0.0.1 # your ip
+
+transport.tcp.port: 9301 # your tcp port
+transport.tcp.compress: true
+http.port: 9201 # your
+
+discovery.zen.ping.unicast.hosts: "127.0.0.1:9301,127.0.0.2:9301" #所有master的tcp发现端口
+discovery.zen.minimum_master_nodes: 1   #需要最少有多少个master, 才能选出有效master, 一般会配3个master, 再将该参数配为2, 以防脑裂
+discovery.zen.ping_timeout: 30s
+
+#心跳timeout设为2分钟，超过6次心跳没有回应，则认为该节点脱离master，每隔20s发送一次心跳。
+discovery.zen.fd.ping_timeout: 120s
+discovery.zen.fd.ping_retries: 6
+discovery.zen.fd.ping_interval: 20s
+#要选出可用master, 最少需要几个master节点
+#discovery.zen.minimum_master_nodes: 2
+
+http.cors.enabled: true
+http.cors.allow-origin: /https?:\/\/localhost(:[0-9]+)?/
+
+
+#不使用交换区
+bootstrap.memory_lock: true
+
+#cluster.routing.allocation.awareness.attributes: group
+
+#删除索引要求全名
+action.destructive_requires_name: true
+##cluster.routing.allocation.cluster_concurrent_rebalance:2  只允许同时移动2个分片
+##cluster.routing.allocation.disk.threshold_enabled: true,   default  85%不再分配, 90%迁移走
