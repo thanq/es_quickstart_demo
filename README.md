@@ -1,5 +1,5 @@
-
 #ES快速上手(5.4.0版本)
+
 
 ## ES安装
  1. 下载并安装较新jdk8
@@ -9,13 +9,13 @@
 )
  3. 配置系统参数:
   
-    - vim /etc/security/limits.conf
+   - vim /etc/security/limits.conf
     
             es - nofile 65536 #按需修改es用户最大打开文件数, 需>= 65536
             es soft memlock unlimited #解除es用户使用内存限制
             es hard memlock unlimited #解除es用户使用内存限制
-   
-    - vim /etc/security/limits.d/90-nproc.conf
+
+   - vim /etc/security/limits.d/90-nproc.conf
         
             es    nproc   127979 #如果你的es吞吐量大, 还得修改es用户可以打开的最大线程数, 防止出现最大线程数满, 无法创建本地线程的问题 
     
