@@ -3,18 +3,19 @@
 
 ## ES安装
  1. 下载并安装较新jdk8
- 2. 创建并切到es用户 adduser es && su - es
+ 2. 创建并切到es用户 adduser es && su - es   
+ 
  下载: [https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.4.0.tar.gz](https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.4.0.tar.gz
 )
  3. 配置系统参数:
   
-    1. vim /etc/security/limits.conf
+    - vim /etc/security/limits.conf
     
             es - nofile 65536 #按需修改es用户最大打开文件数, 需>= 65536
             es soft memlock unlimited #解除es用户使用内存限制
             es hard memlock unlimited #解除es用户使用内存限制
    
-    2. vim /etc/security/limits.d/90-nproc.conf
+    - vim /etc/security/limits.d/90-nproc.conf
         
             es    nproc   127979 #如果你的es吞吐量大, 还得修改es用户可以打开的最大线程数, 防止出现最大线程数满, 无法创建本地线程的问题 
     
@@ -30,8 +31,9 @@
         -Xloggc:${logdir}/gc.log #配置输出gc日志
     
  5. 按需修改配置文件(demo见 src/main/config目录)   
- 启动: 使用es用户, 先kill所有data节点, 再kill所有master节点
- 重启: 使用es用户, 先启动所有data节点, 再启动所有master节点(启动命令: 在对应es的bin目录下执行 ./elasticsearch -d) 
+ 
+    - 停止集群: 使用es用户, 先kill所有data节点, 再kill所有master节点
+    - 启动集群: 使用es用户, 先启动所有data节点, 再启动所有master节点(启动命令: 在对应es的bin目录下执行 ./elasticsearch -d) 
  
  
  ## 安全
@@ -56,7 +58,7 @@
      
     #如需删除某行规则, 可以先执行 iptables -nL INPUT --line-numbers , 再执行 ptables -D INPUT n #n为行号, 需要注意执行删除后行号会变, 要得到新的行号, 需要再次执行 iptables -nL INPUT --line-numbers
      
-    service iptables save  #将当前iptables配置刷到/etc/sysconfig/iptables
+    service iptables save  #将当前iptables配置刷到/etc/sysconfig/iptables, 需要注意重启后iptables不会自动加载规则(防止手误导致任何人都连不上该机器的情况), 需要每次重启后手动load规则, 或将加载规则脚本放到/etc/rc.d/init.d/ , 每次开机执行
      
  为了方便可以在本地开发机添加如下 ssh config配置(需修改 ~/.ssh/config 文件)
   
@@ -76,7 +78,7 @@
 
 ### elasticsearch-sql, 方便数据开发
 [https://github.com/NLPchina/elasticsearch-sql](https://github.com/NLPchina/elasticsearch-sql)
-sql插件可以
+sql插件可以将sql转dsl供开发参考, 以及快速查询数据以方便开发调试/处理问题 建议安装
 
 ### kibana, 方便开发/数据展示
 [下载](https://artifacts.elastic.co/downloads/kibana/kibana-5.4.0-linux-x86_64.tar.gz)
