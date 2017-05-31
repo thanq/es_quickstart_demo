@@ -2,32 +2,34 @@
 #ES快速上手(5.4.0版本)
 
 ## ES安装
- 1 下载并安装较新jdk8
- 1 创建并切到es用户 adduser es && su - es
+ 1. 下载并安装较新jdk8
+ 2. 创建并切到es用户 adduser es && su - es
  下载: [https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.4.0.tar.gz](https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.4.0.tar.gz
 )
- 配置系统参数:
-  1 vim /etc/security/limits.conf
+ 3. 配置系统参数:
+  
+    1. vim /etc/security/limits.conf
     
-    es - nofile 65536 #按需修改es用户最大打开文件数, 需>= 65536
-    es soft memlock unlimited #解除es用户使用内存限制
-    es hard memlock unlimited #解除es用户使用内存限制
+            es - nofile 65536 #按需修改es用户最大打开文件数, 需>= 65536
+            es soft memlock unlimited #解除es用户使用内存限制
+            es hard memlock unlimited #解除es用户使用内存限制
    
-  2 vim /etc/security/limits.d/90-nproc.conf
-    es    nproc   127979 #如果你的es吞吐量大, 还得修改es用户可以打开的最大线程数, 防止出现最大线程数满, 无法创建本地线程的问题 
+    2. vim /etc/security/limits.d/90-nproc.conf
+        
+            es    nproc   127979 #如果你的es吞吐量大, 还得修改es用户可以打开的最大线程数, 防止出现最大线程数满, 无法创建本地线程的问题 
     
   
- 配置jvm参数(修改 config/jvm.options 文件):
+ 4. 配置jvm参数(修改 config/jvm.options 文件):
     
-    -Xms2g
-    -Xmx2g #按需配置内存大小, 如果内存较大可以使用G1gc(建议8G以上必须使用G1), 内存设置建议小于32G(某些jdk版本大于等于32G时会关闭指针压缩, 较为浪费内存) , 由于es的docvalues索引会使用文件缓存, 一般要求服务器要有大于es堆容量的内存冗余供系统文件cache使用
+        -Xms2g
+        -Xmx2g #按需配置内存大小, 如果内存较大可以使用G1gc(建议8G以上必须使用G1), 内存设置建议小于32G(某些jdk版本大于等于32G时会关闭指针压缩, 较为浪费内存) , 由于es的docvalues索引会使用文件缓存, 一般要求服务器要有大于es堆容量的内存冗余供系统文件cache使用
     
-    #输出gc日志
-    -XX:+PrintGCDetails
-    -XX:+PrintGCDateStamps
-    -Xloggc:${logdir}/gc.log #配置输出gc日志
+        #输出gc日志
+        -XX:+PrintGCDetails
+        -XX:+PrintGCDateStamps
+        -Xloggc:${logdir}/gc.log #配置输出gc日志
     
-    
+ 5. 按需修改配置文件(demo见 src/main/config目录)   
  启动: 使用es用户, 先kill所有data节点, 再kill所有master节点
  重启: 使用es用户, 先启动所有data节点, 再启动所有master节点(启动命令: 在对应es的bin目录下执行 ./elasticsearch -d) 
  
